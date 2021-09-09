@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const People = () => {
 
-    var planetName = ""
+    // var planetName = ""
 
     const [person, setPerson] = useState({})
     const [planet, setPlanet] = useState({})
@@ -12,27 +12,30 @@ const People = () => {
 
     useEffect(() => {
         axios.get(`https://swapi.dev/api/people/${id}`)
-            .then(res => setPerson(res.data))
+            .then(res => {
+                setPerson(res.data)
+                getHomeworld(res.data.homeworld)
+            })
             .catch(err => alert("Could not retrieve data."))
     }, [id])
 
     const getHomeworld = (url) => {
-        let apiCall = (url) => {
-            axios.get(url)
-                .then(res => setPlanet(res.data))
-                .catch(err => console.log("Could not retrieve planet."))
-            planetName = planet.name
-            return planet.name
-        }
+        // let apiCall = (url) => {
+        axios.get(url)
+            .then(res => setPlanet(res.data))
+            .catch(err => console.log("Could not retrieve planet."))
+        // planetName = planet.name
+        return planet.name
+        // }
         // console.log(planet);
-        if(!planet[0]){
-            setTimeout(apiCall(url), 5*1000)
-            return planet.name
-        } else {
-            planet = {}
-            setTimeout(apiCall(url), 5*1000)
-            return planet.name
-        }
+        // if(!planet[0]){
+        //     setTimeout(apiCall(url), 5*1000)
+        //     return planet.name
+        // } else {
+        //     planet = {}
+        //     setTimeout(apiCall(url), 5*1000)
+        //     return planet.name
+        // }
     }
 
     // getHomeworld(person.homeworld)
@@ -40,7 +43,7 @@ const People = () => {
     return (
         <div>
             <h1 className="display-4 my-4">{person.name}</h1>
-            <p><strong>Homeworld: </strong> {planetName}</p>
+            <p><strong>Homeworld: </strong> {planet.name}</p>
             <p><strong>Height: </strong> {person.height} cm </p>
             <p><strong>Mass: </strong> {person.mass} kg </p>
             <p><strong>Hair Color: </strong> {person.hair_color} </p>
